@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Stack;
 
 /**
  * Implementation of the Binary Tree ADT for use with Huffman Encoding
@@ -99,12 +101,50 @@ public class HuffmanTree implements BinaryTreeADT {
     /**
      * Creates an in order iterator for the tree
      *
-     * @return
+     * @return preOrder iterator for the tree
      */
     @Override
     public Iterator iteratorPreOrder() {
         return new TreeIterator(this,size);
     }
 
+    /**
+     * Returns all the leaves of the tree. Used to encode text
+     * @return ArrayList of leaves of the tree
+     */
+    public ArrayList<Integer> getLeafList(){
+        //collection list for leaves
+        ArrayList<Integer> leaves = new ArrayList<>();
 
+
+        HuffmanTree curr;
+        HuffmanTree left;
+        HuffmanTree right;
+
+        Stack<HuffmanTree> stack = new Stack<>();
+        stack.push(this);
+        while(!stack.isEmpty()){
+            curr = stack.pop();
+            left = (HuffmanTree) curr.leftSubtree();
+            right = (HuffmanTree) curr.rightSubtree();
+
+            //if the root of both subtrees is null, it is a leaf
+            if(left.root() == null && right.root() == null){
+                leaves.add(curr.root());
+            }
+
+            //If the left's root is not null, it is an internal node
+            //and it is added to the stack
+            if(left.root() != null){
+                stack.push(left);
+            }
+
+            //If the left's root is not null, it is an internal node
+            //and it is added to the stack
+            if(right.root() != null){
+                stack.push(right);
+            }
+        }
+        return leaves;
+    }
 }
