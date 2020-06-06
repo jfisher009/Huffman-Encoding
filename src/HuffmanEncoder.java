@@ -23,21 +23,29 @@ public class HuffmanEncoder {
     }
 
     /**
+     * Recursively encodes a single character with the given tree
      * @param ch The character being encoded
      * @param tree The tree to search use to encode the character
      * @return The encoded character as a binary string
      * @throws NoSuchFieldException
      */
     public String encodeChar(char ch, HuffmanTree tree) throws NoSuchFieldException {
+        //If at the given character, return nothing
         if(tree.leftSubtree().root() == null && tree.rightSubtree().root() == null && tree.root() == (int)ch){
             return "";
         }
-        else if(((BinaryTree<Integer>)tree.leftSubtree()).getLeafList().contains((int)ch)){
-            return "0"+encodeChar(ch, (BinaryTree<Integer>) tree.leftSubtree());
+
+        //If character is in left subtree, add a 0 and go down the left side
+        else if(((HuffmanTree)tree.leftSubtree()).getLeafList().contains((int)ch)){
+            return "0"+encodeChar(ch, (HuffmanTree) tree.leftSubtree());
         }
-        else if(((BinaryTree<Integer>)tree.rightSubtree()).getLeafList().contains((int)ch)){
-            return "1"+encodeChar(ch, (BinaryTree<Integer>) tree.rightSubtree());
+
+        //If character is in right subtree, add a 0 and go down the right side
+        else if(((HuffmanTree)tree.leftSubtree()).getLeafList().contains((int)ch)){
+            return "1"+encodeChar(ch, (HuffmanTree) tree.rightSubtree());
         }
+
+        //Should not ever reach this part of the code
         else{
             throw new NoSuchFieldException("Char not in tree");
         }
