@@ -17,9 +17,22 @@ public class HuffmanEncoder {
      *                    front of the binary encoding
      * @return The encoded message
      */
-    public String encodeMessage(String message, boolean prependTree){
+    public String encodeMessage(String message, boolean prependTree) throws NoSuchFieldException {
+        HuffmanTree encodingTree = treeBuilder.buildTree(message);
+        String out = "";
+        String encodedTree = "";
 
-        return null;
+        //Set tree to prepend to the front of binary message
+        if(prependTree){
+            encodedTree = treeBuilder.encodeTree(encodingTree);
+        }
+
+        //encode the message one character at a time
+        for(int i = 0; i < message.length(); i++){
+            out += encodeChar(message.charAt(i), encodingTree);
+        }
+
+        return encodedTree+out;
     }
 
     /**
@@ -29,8 +42,9 @@ public class HuffmanEncoder {
      * @return The encoded character as a binary string
      * @throws NoSuchFieldException
      */
-    public String encodeChar(char ch, HuffmanTree tree) throws NoSuchFieldException {
+    private String encodeChar(char ch, HuffmanTree tree) throws NoSuchFieldException {
         //If at the given character, return nothing
+
         if(tree.leftSubtree().root() == null && tree.rightSubtree().root() == null && tree.root() == (int)ch){
             return "";
         }
@@ -41,7 +55,7 @@ public class HuffmanEncoder {
         }
 
         //If character is in right subtree, add a 0 and go down the right side
-        else if(((HuffmanTree)tree.leftSubtree()).getLeafList().contains((int)ch)){
+        else if(((HuffmanTree)tree.rightSubtree()).getLeafList().contains((int)ch)){
             return "1"+encodeChar(ch, (HuffmanTree) tree.rightSubtree());
         }
 
@@ -49,5 +63,9 @@ public class HuffmanEncoder {
         else{
             throw new NoSuchFieldException("Char not in tree");
         }
+    }
+
+    public HuffmanTree getEncodingTree(String message){
+        return treeBuilder.buildTree(message);
     }
 }
