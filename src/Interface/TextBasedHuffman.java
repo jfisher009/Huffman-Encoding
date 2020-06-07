@@ -1,3 +1,5 @@
+package Interface;
+
 import Huffman.HuffmanDecoder;
 import Huffman.HuffmanEncoder;
 
@@ -25,12 +27,12 @@ public class TextBasedHuffman {
     }
 
     /**
-     * The bulk of the TextBasedHuffman class. Will let a user encode or decode
+     * The bulk of the Interface.TextBasedHuffman class. Will let a user encode or decode
      * any number of messages.
      * @throws IOException
      * @throws NoSuchFieldException
      */
-    public void run() throws IOException, NoSuchFieldException {
+    public void run(){
         boolean running = true;
         String input;
         System.out.println("Welcome to Huffman Encoder/Decoder by Julian Fisher");
@@ -40,10 +42,15 @@ public class TextBasedHuffman {
         while(running){
             //temp string used to hold a string for short durations only. Misc. uses
             String temp;
-
-            input = getInput("Would you like to encode or decode a message? Type \"encode\" to" + "\n" +
-                    "encode a message or \"decode\" to decode a message. Or, type " + "\n" +
-                    "\"stop\" to exit Huffman Encoder/Decoder.");
+            input = "";
+            try {
+                input = getInput("Would you like to encode or decode a message? Type \"encode\" to" + "\n" +
+                        "encode a message or \"decode\" to decode a message. Or, type " + "\n" +
+                        "\"stop\" to exit Huffman Encoder/Decoder.");
+            }
+            catch(IOException e){
+                handleIOException(e);
+            }
 
             //add some spaces in between choice and action
             System.out.println("");
@@ -57,22 +64,34 @@ public class TextBasedHuffman {
 
             //if user wants to encode
             else if(input.toLowerCase().equals("encode")){
-                System.out.println("The encoded message will be copied to your clipboard.");
-                input = getInput("Enter your message to be encoded.");
-                System.out.println();
-                System.out.println("Binary encoded message: ");
-                temp = encoder.encodeMessage(input);
-                System.out.println(temp);
-                copyToClipboard(temp);
+                try {
+                    System.out.println("The encoded message will be copied to your clipboard.");
+                    input = getMultiLineInput("Enter your message to be encoded.");
+                    System.out.println();
+                    System.out.println("Binary encoded message: ");
+                    temp = encoder.encodeMessage(input);
+                    System.out.println(temp);
+                    copyToClipboard(temp);
+                }
+                catch(NoSuchFieldException e){
+
+                }
+                catch(IOException e){
+                    handleIOException(e);
+                }
             }
 
             //if user wants to decode
             else if(input.toLowerCase().equals("decode")){
-                input = getInput("Enter your message to be decode.");
-                System.out.println();
-                System.out.println("Decoded message: ");
-                System.out.println(decoder.decodeMessage(input));
-
+                try {
+                    input = getInput("Enter your message to be decode.");
+                    System.out.println();
+                    System.out.println("Decoded message: ");
+                    System.out.println(decoder.decodeMessage(input));
+                }
+                catch(IOException e){
+                    handleIOException(e);
+                }
             }
 
             //if invalid user input
@@ -94,7 +113,7 @@ public class TextBasedHuffman {
      * denote the end of the input.
      * @return The user's input
      */
-    private String getInput(String instructions) throws IOException {
+    private String getMultiLineInput(String instructions) throws IOException {
         System.out.println(instructions);
         System.out.println("Please type <<end>> on a new line to mark the end of your input.");
 
@@ -118,9 +137,37 @@ public class TextBasedHuffman {
         return out;
     }
 
+    private String getInput(String instructions) throws IOException{
+        System.out.println(instructions);
+        return reader.readLine();
+    }
+
+    /**
+     * Copies a given string to the clipboard.
+     * @param text Text to be copied
+     */
     private void copyToClipboard(String text){
         StringSelection stringSelection = new StringSelection(text);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
+    }
+
+    /**
+     * Handles an IOException whenever it is thrown by a BufferedReader
+     * @param e IOException being handled
+     */
+    public void handleIOException(IOException e){
+        e.printStackTrace();
+        System.out.println("An error has occurred. Please try again.");
+    }
+
+    /**
+     * Handles a NoSuchFieldException thrown by the encoder
+     * @param e NoSuchFieldException being handled
+     */
+    public void handleNoSuchFieldException(NoSuchFieldException e){
+        e.printStackTrace();
+        System.out.println("An encoding error has occurred. " +
+                "\n Please try again.");
     }
 }
