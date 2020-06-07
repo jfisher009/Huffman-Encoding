@@ -70,6 +70,7 @@ public class TreeIterator implements Iterator {
             return;
         }
         else{
+            //add root
             if(tree.leftSubtree().root() == null){
                 collectionArray[current]=tree.root();
 
@@ -78,7 +79,10 @@ public class TreeIterator implements Iterator {
                 collectionArray[current] = -1;
             }
             current++;
+
+            //traverse left
             preOrderTrav((HuffmanTree) tree.leftSubtree());
+            //traverse right
             preOrderTrav((HuffmanTree) tree.rightSubtree());
         }
     }

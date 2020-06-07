@@ -116,7 +116,6 @@ public class HuffmanTree implements BinaryTreeADT {
         //collection list for leaves
         ArrayList<Integer> leaves = new ArrayList<>();
 
-
         HuffmanTree curr;
         HuffmanTree left;
         HuffmanTree right;
