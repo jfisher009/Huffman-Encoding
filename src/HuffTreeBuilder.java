@@ -7,6 +7,8 @@ import java.util.Stack;
  * A class used to build Huffman Trees for a given string. All
  * characters in the string must have 0<= ascii value < 128
  * This class will also take a Huffman Tree and encode it in binary
+ * @author Julian Fisher
+ * @version 06-07-2020
  */
 public class HuffTreeBuilder {
     //Priority Queue used to help build the huffman tree

@@ -5,7 +5,7 @@ import java.util.Stack;
 /**
  * Implementation of the Binary Tree ADT for use with Huffman Encoding
  * @author Julian Fisher
- * @Version 1.0
+ * @version 06-07-2020
  */
 public class HuffmanTree implements BinaryTreeADT {
     protected Integer root;

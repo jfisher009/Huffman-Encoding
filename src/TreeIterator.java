@@ -2,6 +2,8 @@ import java.util.Iterator;
 
 /**
  * Provides an iterator for HuffmanTree
+ * @author Julian Fisher
+ * @version 06-07-2020
  */
 public class TreeIterator implements Iterator {
     // current iterator

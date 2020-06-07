@@ -4,6 +4,8 @@ import java.util.Stack;
 /**
  * Huffman Encoder class. Implements encoding messages
  * using the Huffman Encoding text compression strategy
+ * @author Julian Fisher
+ * @version 06-07-2020
  */
 
 public class HuffmanDecoder {
@@ -16,7 +18,7 @@ public class HuffmanDecoder {
 
     /**
      * Decode the given binary string. The string must have the tree encoded
-     * at the begining of the binary string.
+     * at the beginning of the binary string.
      * @param binary Binary string for the message
      * @return The decoded message
      */
@@ -49,7 +51,7 @@ public class HuffmanDecoder {
                 currTree = decodingTree;
 
                 //while you are at an internal node
-                while(currTree.leftSubtree().root() != null && currTree.leftSubtree().root() != null){
+                while(currTree.leftSubtree().root() != null && currTree.rightSubtree().root() != null){
                     //get next char and remove it from string
                     currChar = encodedMessage.charAt(0);
                     encodedMessage = encodedMessage.substring(1);

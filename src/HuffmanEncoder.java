@@ -1,6 +1,8 @@
 /**
  * Huffman Encoder class. Implements encoding messages
  * using the Huffman Encoding text compression strategy
+ * @author Julian Fisher
+ * @version 06-07-2020
  */
 
 public class HuffmanEncoder {

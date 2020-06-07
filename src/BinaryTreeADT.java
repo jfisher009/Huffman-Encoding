@@ -2,7 +2,7 @@ import java.util.Iterator;
 
 /**
  * Programming interface for binary tree data structure
- * @author Scott Sigman, Chris Branton
+ * @author Scott Sigman, Chris Branton, Julian Fisher
  * @Revision by Julian Fisher on 2020-06-06 Changed iteratorInOrder to iteratorPreOrder
  * @version 2020-04-24
  */
