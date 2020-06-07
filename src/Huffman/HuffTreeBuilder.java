@@ -1,3 +1,7 @@
+package Huffman;
+
+import Huffman.Tree.HuffmanTree;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.PriorityQueue;
@@ -27,8 +31,8 @@ public class HuffTreeBuilder {
     }));
 
     /**
-     * Constructor only used to make an instance of HuffTreeBuilder.
-     * No data is stored in HuffTreeBuilder. It is only used to call
+     * Constructor only used to make an instance of Huffman.HuffTreeBuilder.
+     * No data is stored in Huffman.HuffTreeBuilder. It is only used to call
      * methods.
      */
     public HuffTreeBuilder(){

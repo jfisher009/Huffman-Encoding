@@ -1,3 +1,5 @@
+package Huffman.Tree;
+
 import java.util.Iterator;
 
 /**

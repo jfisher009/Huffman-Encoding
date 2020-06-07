@@ -1,3 +1,5 @@
+package Huffman.Tree;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
@@ -56,6 +58,22 @@ public class HuffmanTree implements BinaryTreeADT {
     }
 
     /**
+     * Setter for left subtree
+     * @param left New left subtree
+     */
+    public void setLeftSubtree(HuffmanTree left){
+        this.left = left;
+    }
+
+    /**
+     * Setter for right subtree
+     * @param right New right subtree
+     */
+    public void setRightSubtree(HuffmanTree right){
+        this.right = right;
+    }
+
+    /**
      * @return True if the tree is empty; false otherwise
      */
     @Override
@@ -99,8 +117,7 @@ public class HuffmanTree implements BinaryTreeADT {
     }
 
     /**
-     * Creates an in order iterator for the tree
-     *
+     * Creates a pre order iterator for the tree
      * @return preOrder iterator for the tree
      */
     @Override

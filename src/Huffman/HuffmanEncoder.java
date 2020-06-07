@@ -1,3 +1,7 @@
+package Huffman;
+
+import Huffman.Tree.HuffmanTree;
+
 /**
  * Huffman Encoder class. Implements encoding messages
  * using the Huffman Encoding text compression strategy

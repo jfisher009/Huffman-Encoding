@@ -1,3 +1,7 @@
+package Huffman;
+
+import Huffman.Tree.HuffmanTree;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -76,9 +80,9 @@ public class HuffmanDecoder {
     }
 
     /**
-     * Decode the HuffmanTree given as a binary String.
+     * Decode the Huffman.Tree.HuffmanTree given as a binary String.
      * @param treeAsBinary The binary representation of the tree
-     * @return Decoded HuffmanTree
+     * @return Decoded Huffman.Tree.HuffmanTree
      */
     public HuffmanTree decodeTree(String treeAsBinary){
         String treeLength = treeAsBinary.substring(0,16);
@@ -126,11 +130,11 @@ public class HuffmanDecoder {
             while(!found){
                 findingNode = nodeList.get(findingPos);
                 if(findingNode.root() == -1 && findingNode.leftSubtree().root() == null){
-                    findingNode.left = currNode;
+                    findingNode.setLeftSubtree(currNode);
                     found = true;
                 }
                 else if(findingNode.root() == -1 && findingNode.rightSubtree().root() == null){
-                    findingNode.right = currNode;
+                    findingNode.setRightSubtree(currNode);
                     found = true;
                 }
                 findingPos--;

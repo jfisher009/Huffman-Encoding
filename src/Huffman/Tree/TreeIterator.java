@@ -1,7 +1,11 @@
+package Huffman.Tree;
+
+import Huffman.Tree.HuffmanTree;
+
 import java.util.Iterator;
 
 /**
- * Provides an iterator for HuffmanTree
+ * Provides an iterator for Huffman.Tree.HuffmanTree
  * @author Julian Fisher
  * @version 06-07-2020
  */
@@ -19,7 +23,7 @@ public class TreeIterator implements Iterator {
     private HuffmanTree collection;
 
     /**
-     * Constructs a TreeIterator that iterates over the tree
+     * Constructs a Huffman.Tree.TreeIterator that iterates over the tree
      */
     public TreeIterator(HuffmanTree collection, int size)
     {
