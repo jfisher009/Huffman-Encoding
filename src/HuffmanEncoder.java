@@ -38,6 +38,16 @@ public class HuffmanEncoder {
     }
 
     /**
+     * Default encode message will include tree
+     * @param message Message to be encoded
+     * @return The encoded message with the tree
+     * @throws NoSuchFieldException
+     */
+    public String encodeMessage(String message) throws NoSuchFieldException {
+        return encodeMessage(message, true);
+    }
+
+    /**
      * Recursively encodes a single character with the given tree
      * @param ch The character being encoded
      * @param tree The tree to search use to encode the character
