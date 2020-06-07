@@ -20,6 +20,9 @@ public class TextBasedHuffman {
     private HuffmanDecoder decoder;
     private BufferedReader reader;
 
+    /**
+     * Constructor for TextBasedHuffman
+     */
     public TextBasedHuffman(){
         encoder = new HuffmanEncoder();
         decoder = new HuffmanDecoder();
@@ -29,8 +32,6 @@ public class TextBasedHuffman {
     /**
      * The bulk of the Interface.TextBasedHuffman class. Will let a user encode or decode
      * any number of messages.
-     * @throws IOException
-     * @throws NoSuchFieldException
      */
     public void run(){
         boolean running = true;
@@ -58,45 +59,46 @@ public class TextBasedHuffman {
             System.out.println("");
 
             //if user wants to stop
-            if(input.toLowerCase().equals("stop")){
-                running = false;
-            }
+            switch (input.toLowerCase()) {
+                case "stop":
+                    running = false;
+                    break;
 
-            //if user wants to encode
-            else if(input.toLowerCase().equals("encode")){
-                try {
-                    System.out.println("The encoded message will be copied to your clipboard.");
-                    input = getMultiLineInput("Enter your message to be encoded.");
-                    System.out.println();
-                    System.out.println("Binary encoded message: ");
-                    temp = encoder.encodeMessage(input);
-                    System.out.println(temp);
-                    copyToClipboard(temp);
-                }
-                catch(NoSuchFieldException e){
+                //if user wants to encode
+                case "encode":
+                    try {
+                        System.out.println("The encoded message will be copied to your clipboard.");
+                        input = getMultiLineInput("Enter your message to be encoded.");
+                        System.out.println();
+                        System.out.println("Binary encoded message: ");
+                        temp = encoder.encodeMessage(input);
+                        System.out.println(temp);
+                        copyToClipboard(temp);
+                    }
+                    catch (NoSuchFieldException e) {
+                        handleNoSuchFieldException(e);
+                    }
+                    catch (IOException e) {
+                        handleIOException(e);
+                    }
+                    break;
 
-                }
-                catch(IOException e){
-                    handleIOException(e);
-                }
-            }
+                //if user wants to decode
+                case "decode":
+                    try {
+                        input = getInput("Enter your message to be decode.");
+                        System.out.println();
+                        System.out.println("Decoded message: ");
+                        System.out.println(decoder.decodeMessage(input));
+                    } catch (IOException e) {
+                        handleIOException(e);
+                    }
+                    break;
 
-            //if user wants to decode
-            else if(input.toLowerCase().equals("decode")){
-                try {
-                    input = getInput("Enter your message to be decode.");
-                    System.out.println();
-                    System.out.println("Decoded message: ");
-                    System.out.println(decoder.decodeMessage(input));
-                }
-                catch(IOException e){
-                    handleIOException(e);
-                }
-            }
-
-            //if invalid user input
-            else {
-                System.out.println("You have entered an invalid input. Please try again.");
+                //if invalid user input
+                default:
+                    System.out.println("You have entered an invalid input. Please try again.");
+                    break;
             }
 
             //add some spaces in between loops
@@ -112,6 +114,7 @@ public class TextBasedHuffman {
      * Gets multi line input from the user. The user must type <<end>> on a new line to
      * denote the end of the input.
      * @return The user's input
+     * @throws IOException from BufferedReader
      */
     private String getMultiLineInput(String instructions) throws IOException {
         System.out.println(instructions);
@@ -137,6 +140,12 @@ public class TextBasedHuffman {
         return out;
     }
 
+    /**
+     * Get single line input from the user
+     * @param instructions intructions to print
+     * @return The user's input
+     * @throws IOException from BufferedReader
+     */
     private String getInput(String instructions) throws IOException{
         System.out.println(instructions);
         return reader.readLine();
