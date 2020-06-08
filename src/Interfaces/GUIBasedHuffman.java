@@ -100,8 +100,14 @@ public class GUIBasedHuffman {
                 }
 
                 else if(e.getSource().equals(decode)){
-                    String in = input.getText();
-                    output.setText(decoder.decodeMessage(in));
+                    try {
+                        String in = input.getText();
+                        output.setText(decoder.decodeMessage(in));
+                    }
+                    catch(IllegalStateException except){
+                        output.setText("The given string is not in binary." +
+                                "\nPleasse try again with a binary string.");
+                    }
                 }
 
                 else if(e.getSource().equals(copyToClipboard)){

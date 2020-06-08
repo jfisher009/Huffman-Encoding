@@ -27,6 +27,12 @@ public class HuffmanDecoder {
      * @return The decoded message
      */
     public String decodeMessage(String binary){
+        //Make sure string is in binary
+        for(int i = 0; i < binary.length(); i++){
+            if(!(binary.charAt(i) == '0' || binary.charAt(i) == '1')){
+                throw new IllegalStateException("Given string is not in binary");
+            }
+        }
         //first 16 bits are the number of bits used to encode the tree
         int treeEncodeLength = Integer.parseInt(binary.substring(0,16), 2);
         String binaryEncodedTree = binary.substring(0,16+treeEncodeLength);
@@ -84,7 +90,7 @@ public class HuffmanDecoder {
      * @param treeAsBinary The binary representation of the tree
      * @return Decoded Huffman.Tree.HuffmanTree
      */
-    public HuffmanTree decodeTree(String treeAsBinary){
+    private HuffmanTree decodeTree(String treeAsBinary){
         String treeLength = treeAsBinary.substring(0,16);
         int length = Integer.parseInt(treeLength, 2);
         treeAsBinary = treeAsBinary.substring(16,16+length);
