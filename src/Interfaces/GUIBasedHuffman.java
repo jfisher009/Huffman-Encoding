@@ -9,8 +9,14 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+/**
+ * A GUI based interface for Huffman Encoding
+ * @author Julian Fisher
+ * @version 06-08-2020
+ */
 public class GUIBasedHuffman {
     private JFrame frame;
     private GridBagConstraints c;
@@ -54,19 +60,24 @@ public class GUIBasedHuffman {
      */
     public GUIBasedHuffman(){
         frame = new JFrame();
+
+        //action listener for all buttons and menus
         listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //clear input button
                 if(e.getSource().equals(clearInput)){
                     input.setText("");
                 }
 
+                //clear output button
                 else if(e.getSource().equals(clearOutput)){
                     output.setText("");
                 }
 
+                //encode button
                 else if (e.getSource().equals(encode)){
-                    //TODO Update stats along top bar
+                    //get input
                     String in = input.getText();
                     String encodedMessage = "";
                     try {
@@ -77,28 +88,37 @@ public class GUIBasedHuffman {
                         output.setText("An encoding error has occured." +
                                 "\n Please try again.");
                     }
+                    catch(IllegalArgumentException except){
+                        output.setText("Characters encoded must have ascii values between 0 and 128." +
+                                "\nPlease try again.");
+                    }
+                    //figuring out stats
                     Integer asciiLength = in.length() * 8;
                     Integer huffmanLength = encodedMessage.length();
                     double percentChange;
                     String percentChangOut;
+
+                    //used to cut off after tow decimal points
+                    DecimalFormat df = new DecimalFormat("#.##");
+
                     if(asciiLength > huffmanLength) {
-                        percentChange = (((asciiLength - huffmanLength) / asciiLength) * 100);
-                        percentChangOut = "-"+percentChange + "%";
+                        percentChange = (((double)(asciiLength - huffmanLength) / asciiLength) * 100);
+                        percentChangOut = "-" + df.format(percentChange) + "%";
                     }
-                    if(asciiLength < huffmanLength) {
-                        percentChange = (((asciiLength - huffmanLength) / asciiLength) * 100);
-                        percentChangOut = "+"+percentChange + "%";
+                    else if(asciiLength < huffmanLength) {
+                        percentChange = (((double)(huffmanLength - asciiLength) / asciiLength) * 100);
+                        percentChangOut = "+" + df.format(percentChange) + "%";
                     }
                     else{
                         percentChangOut = "+/-0.0%";
                     }
-
 
                     numAsciiBits.setText(asciiLength.toString());
                     numHuffBits.setText(huffmanLength.toString());
                     numPercentChange.setText(percentChangOut);
                 }
 
+                //decode button
                 else if(e.getSource().equals(decode)){
                     try {
                         String in = input.getText();
@@ -110,12 +130,14 @@ public class GUIBasedHuffman {
                     }
                 }
 
+                //Copy to clipboard button
                 else if(e.getSource().equals(copyToClipboard)){
                     StringSelection stringSelection = new StringSelection(output.getText());
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);
                 }
 
+                //using drop down menu
                 else if(e.getSource().equals(encodeOrDecode)){
                     if(encodeOrDecode.getSelectedItem().equals("Encode")){
                         setUpEncode();
@@ -130,9 +152,6 @@ public class GUIBasedHuffman {
                 }
             }
         };
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new GridBagLayout());
-        c = new GridBagConstraints();
         configWindow();
 
         //add items to encode specific list
@@ -161,7 +180,11 @@ public class GUIBasedHuffman {
      * Uses the GridBagLayout
      */
     private void configWindow(){
+        //setup basics of the fram
         frame.setSize(new Dimension(725,435));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new GridBagLayout());
+        c = new GridBagConstraints();
 
         c.ipadx = DEFAULT_X_PADDING;
         c.ipady = DEFAULT_Y_PADDING;
@@ -194,19 +217,19 @@ public class GUIBasedHuffman {
         c.gridheight = 1;
         frame.add(buffer, c);
 
-        //"Ascii bits:"
+        //"Ascii bits:" Label
         configLabel(asciiBits, 4, 0);
 
         //Num bits in ascii. Update every time encode is pressed
         configLabel(numAsciiBits, 5, 0);
 
-        //"Huffman Bits: "
+        //"Huffman Bits: " Label
         configLabel(huffmanBits, 6, 0);
 
         //Num bits in huffman encoding. Updated every time encode is pressed
         configLabel(numHuffBits, 7, 0);
 
-        //"Percent Change:"
+        //"Percent Change:" Label
         configLabel(percentChange, 9, 0);
 
         //% change number Updated when encode is pressed
@@ -298,6 +321,9 @@ public class GUIBasedHuffman {
         frame.add(button, c);
     }
 
+    /**
+     * Setup the window for encoding
+     */
     public void setUpEncode(){
         for(Component comp:decodeSpecificComponents){
             comp.setVisible(false);
@@ -307,6 +333,9 @@ public class GUIBasedHuffman {
         }
     }
 
+    /**
+     * Setup the window for decoding
+     */
     public void setUpDecode(){
         for(Component comp:encodeSpecificComponents){
             comp.setVisible(false);
@@ -314,5 +343,8 @@ public class GUIBasedHuffman {
         for(Component comp:decodeSpecificComponents){
             comp.setVisible(true);
         }
+        numAsciiBits.setText("0");
+        numHuffBits.setText("0");
+        numPercentChange.setText("0");
     }
 }

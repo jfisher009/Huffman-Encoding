@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 /**
  * A text based interface for Huffman Encoding
+ * @author Julian Fisher
+ * @version 06-08-2020
  */
 
 public class TextBasedHuffman {
