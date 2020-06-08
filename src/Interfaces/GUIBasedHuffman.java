@@ -1,9 +1,15 @@
 package Interfaces;
 
+import Huffman.HuffmanDecoder;
+import Huffman.HuffmanEncoder;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class GUIBasedHuffman {
     private JFrame frame;
@@ -11,6 +17,37 @@ public class GUIBasedHuffman {
     private ActionListener listener;
     private final int DEFAULT_Y_PADDING = 20;
     private final int DEFAULT_X_PADDING = 20;
+
+    //Huffman encoder and decoder
+    HuffmanEncoder encoder = new HuffmanEncoder();
+    HuffmanDecoder decoder = new HuffmanDecoder();
+
+    //Components need global scope for action handling
+    //Buttons
+    private Button encode = new Button("Encode");
+    private Button decode = new Button("Decode");
+    private Button clearInput = new Button("Clear");
+    private Button copyToClipboard = new Button("Copy to clipboard");
+    private Button clearOutput = new Button("Clear");
+
+    //Labels
+    private JLabel asciiBits = new JLabel("Ascii Bits:");
+    private JLabel numAsciiBits = new JLabel("0");
+    private JLabel huffmanBits = new JLabel("  Huffman Bits: ");
+    private JLabel numHuffBits = new JLabel("0");
+    private JLabel percentChange = new JLabel("Percent Change: ");
+    private JLabel numPercentChange = new JLabel("0");
+
+    //Text areas
+    private TextArea input = new TextArea(20, 40);
+    private TextArea output = new TextArea(20,40);
+
+    //Select between encode and decode
+    private JComboBox<String> encodeOrDecode = new JComboBox<>();
+
+    //List of components specific to encoding/decoding mode
+    private ArrayList<Component> encodeSpecificComponents = new ArrayList<>();
+    private ArrayList<Component> decodeSpecificComponents = new ArrayList<>();
 
     /**
      * Constructor for the GUI based Huffman encoding
@@ -20,8 +57,70 @@ public class GUIBasedHuffman {
         listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getActionCommand().equals("Clear")){
-                    System.out.println("Clear");
+                if(e.getSource().equals(clearInput)){
+                    input.setText("");
+                }
+
+                else if(e.getSource().equals(clearOutput)){
+                    output.setText("");
+                }
+
+                else if (e.getSource().equals(encode)){
+                    //TODO Update stats along top bar
+                    String in = input.getText();
+                    String encodedMessage = "";
+                    try {
+                        encodedMessage = encoder.encodeMessage(in);
+                        output.setText(encodedMessage);
+                    }
+                    catch(NoSuchFieldException except){
+                        output.setText("An encoding error has occured." +
+                                "\n Please try again.");
+                    }
+                    Integer asciiLength = in.length() * 8;
+                    Integer huffmanLength = encodedMessage.length();
+                    double percentChange;
+                    String percentChangOut;
+                    if(asciiLength > huffmanLength) {
+                        percentChange = (((asciiLength - huffmanLength) / asciiLength) * 100);
+                        percentChangOut = "-"+percentChange + "%";
+                    }
+                    if(asciiLength < huffmanLength) {
+                        percentChange = (((asciiLength - huffmanLength) / asciiLength) * 100);
+                        percentChangOut = "+"+percentChange + "%";
+                    }
+                    else{
+                        percentChangOut = "+/-0.0%";
+                    }
+
+
+                    numAsciiBits.setText(asciiLength.toString());
+                    numHuffBits.setText(huffmanLength.toString());
+                    numPercentChange.setText(percentChangOut);
+                }
+
+                else if(e.getSource().equals(decode)){
+                    String in = input.getText();
+                    output.setText(decoder.decodeMessage(in));
+                }
+
+                else if(e.getSource().equals(copyToClipboard)){
+                    StringSelection stringSelection = new StringSelection(output.getText());
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    clipboard.setContents(stringSelection, null);
+                }
+
+                else if(e.getSource().equals(encodeOrDecode)){
+                    if(encodeOrDecode.getSelectedItem().equals("Encode")){
+                        setUpEncode();
+                    }
+                    else if(encodeOrDecode.getSelectedItem().equals("Decode")){
+                        setUpDecode();
+                    }
+                    //Fixes an issue with jcombobox perpetually covering the
+                    //input textarea
+                    encodeOrDecode.setVisible(false);
+                    encodeOrDecode.setVisible(true);
                 }
             }
         };
@@ -29,6 +128,18 @@ public class GUIBasedHuffman {
         frame.setLayout(new GridBagLayout());
         c = new GridBagConstraints();
         configWindow();
+
+        //add items to encode specific list
+        encodeSpecificComponents.add(encode);
+        encodeSpecificComponents.add(asciiBits);
+        encodeSpecificComponents.add(numAsciiBits);
+        encodeSpecificComponents.add(huffmanBits);
+        encodeSpecificComponents.add(numHuffBits);
+        encodeSpecificComponents.add(percentChange);
+        encodeSpecificComponents.add(numPercentChange);
+
+        //add items to decode specific list
+        decodeSpecificComponents.add(decode);
     }
 
     /**
@@ -55,7 +166,7 @@ public class GUIBasedHuffman {
         configLabel(mode, 0, 0);
 
         //Encode/decode drop box
-        JComboBox<String> encodeOrDecode = new JComboBox<>();
+        encodeOrDecode.addActionListener(listener);
         encodeOrDecode.addItem("Encode");
         encodeOrDecode.addItem("Decode");
         c.ipady = DEFAULT_Y_PADDING / 2;
@@ -78,52 +189,43 @@ public class GUIBasedHuffman {
         frame.add(buffer, c);
 
         //"Ascii bits:"
-        JLabel asciiBits = new JLabel("Ascii Bits:");
         configLabel(asciiBits, 4, 0);
 
         //Num bits in ascii. Update every time encode is pressed
-        JLabel numAsciiBits = new JLabel("TEST NUM");
         configLabel(numAsciiBits, 5, 0);
 
         //"Huffman Bits: "
-        JLabel huffmanBits = new JLabel("  Huffman Bits: ");
         configLabel(huffmanBits, 6, 0);
 
         //Num bits in huffman encoding. Updated every time encode is pressed
-        JLabel numHuffBits = new JLabel("TEST NUM");
         configLabel(numHuffBits, 7, 0);
 
         //"Percent Change:"
-        JLabel percentChange = new JLabel("Percent Change: ");
         configLabel(percentChange, 9, 0);
 
         //% change number Updated when encode is pressed
-        JLabel numPercentChange = new JLabel("TEST %");
         configLabel(numPercentChange, 10, 0);
 
         //Input text area
-        TextArea input = new TextArea(20, 40);
         configTextArea(input,0,1,4);
 
         //Output text area
-        TextArea output = new TextArea(20,40);
         output.setEditable(false);
         configTextArea(output,6,1,4);
 
         //Encode button
-        Button encode = new Button("Encode");
         configButton(encode, 0,3);
 
+        //Decode button
+        configButton(decode, 0, 3);
+
         //Clear input button
-        Button clearInput = new Button("Clear");
         configButton(clearInput, 1,3);
 
         //Copy to clipboard button
-        Button copyToClipboard = new Button("Copy to clipboard");
         configButton(copyToClipboard, 6,3);
 
         //Clear output button
-        Button clearOutput = new Button("Clear");
         configButton(clearOutput, 7,3);
     }
 
@@ -188,5 +290,23 @@ public class GUIBasedHuffman {
         c.gridheight = 1;
         c.anchor = GridBagConstraints.WEST;
         frame.add(button, c);
+    }
+
+    public void setUpEncode(){
+        for(Component comp:decodeSpecificComponents){
+            comp.setVisible(false);
+        }
+        for(Component comp:encodeSpecificComponents){
+            comp.setVisible(true);
+        }
+    }
+
+    public void setUpDecode(){
+        for(Component comp:encodeSpecificComponents){
+            comp.setVisible(false);
+        }
+        for(Component comp:decodeSpecificComponents){
+            comp.setVisible(true);
+        }
     }
 }
