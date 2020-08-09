@@ -1,4 +1,4 @@
-package Interfaces;
+package UserInterfaces;
 
 import Huffman.HuffmanDecoder;
 import Huffman.HuffmanEncoder;
@@ -180,7 +180,7 @@ public class GUIBasedHuffman {
      * Uses the GridBagLayout
      */
     private void configWindow(){
-        //setup basics of the fram
+        //setup basics of the frame
         frame.setSize(new Dimension(725,435));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new GridBagLayout());
@@ -188,7 +188,7 @@ public class GUIBasedHuffman {
 
         c.ipadx = DEFAULT_X_PADDING;
         c.ipady = DEFAULT_Y_PADDING;
-        c.anchor = java.awt.GridBagConstraints.WEST;;
+        c.anchor = java.awt.GridBagConstraints.WEST;
 
         //"Mode:" label
         JLabel mode = new JLabel("Mode:");

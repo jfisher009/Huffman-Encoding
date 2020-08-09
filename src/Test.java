@@ -1,6 +1,5 @@
-import Interfaces.GUIBasedHuffman;
-import Interfaces.TextBasedHuffman;
-
+import UserInterfaces.GUIBasedHuffman;
+import UserInterfaces.TextBasedHuffman;
 import java.io.IOException;
 
 public class Test {

@@ -1,4 +1,4 @@
-package Interfaces;
+package UserInterfaces;
 
 import Huffman.HuffmanDecoder;
 import Huffman.HuffmanEncoder;

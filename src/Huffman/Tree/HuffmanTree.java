@@ -163,4 +163,37 @@ public class HuffmanTree implements BinaryTreeADT {
         }
         return leaves;
     }
+
+    /**
+     * Returns the depth of the current tree
+     * @return The depth of the tree.
+     */
+    public int getDepth(){
+        return getMaxDepth(this);
+    }
+
+    /**
+     * Finds the depth of a tree recursively. My version of an algorithm
+     * found at https://www.geeksforgeeks.org/write-a-c-program-to-find-the-maximum-depth-or-height-of-a-tree/
+     * @param tree Tree to get depth of
+     * @return The depth of the tree
+     */
+    private int getMaxDepth(HuffmanTree tree){
+        int leftDepth;
+        int rightDepth;
+
+        if(tree.isEmpty()){
+            return 0;
+        }
+        else{
+            leftDepth = getMaxDepth((HuffmanTree)tree.leftSubtree());
+            rightDepth = getMaxDepth((HuffmanTree)tree.rightSubtree());
+            if(leftDepth > rightDepth){
+                return leftDepth + 1;
+            }
+            else{
+                return rightDepth + 1;
+            }
+        }
+    }
 }
