@@ -2,6 +2,7 @@ package UserInterfaces;
 
 import Huffman.HuffmanDecoder;
 import Huffman.HuffmanEncoder;
+import Huffman.Tree.Visual.TreePainter;
 
 import javax.swing.*;
 import java.awt.*;
