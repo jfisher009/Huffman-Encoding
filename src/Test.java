@@ -10,12 +10,11 @@ import java.io.IOException;
 public class Test {
 
     public static void main(String args[]) throws NoSuchFieldException, IOException {
-        /**
         TextBasedHuffman tbh = new TextBasedHuffman();
         GUIBasedHuffman gbh = new GUIBasedHuffman();
         gbh.run();
-         */
 
+        /**
         //leaves
         HuffmanTree eight = new HuffmanTree(8);
         HuffmanTree nine = new HuffmanTree(9);
@@ -33,5 +32,6 @@ public class Test {
         frame.add(tv);
         tv.drawTree(one);
         frame.setSize(new Dimension(1200,1200));
+         */
     }
 }

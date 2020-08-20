@@ -2,6 +2,7 @@ package UserInterfaces;
 
 import Huffman.HuffmanDecoder;
 import Huffman.HuffmanEncoder;
+import Huffman.Tree.HuffmanTree;
 import Huffman.Tree.Visual.TreePainter;
 
 import javax.swing.*;
@@ -19,11 +20,18 @@ import java.util.ArrayList;
  * @version 06-08-2020
  */
 public class GUIBasedHuffman {
+    //currTree used to hold the current encoding tree. It is update every time the encode or decode button is pressed.
+    private HuffmanTree currTree;
+
     private JFrame frame;
     private GridBagConstraints c;
     private ActionListener listener;
     private final int DEFAULT_Y_PADDING = 20;
     private final int DEFAULT_X_PADDING = 20;
+
+    //used to visualize the tree
+    private JFrame visualizerFrame;
+    private TreePainter tp;
 
     //Huffman encoder and decoder
     HuffmanEncoder encoder = new HuffmanEncoder();
@@ -61,6 +69,9 @@ public class GUIBasedHuffman {
      */
     public GUIBasedHuffman(){
         frame = new JFrame();
+        visualizerFrame = new JFrame();
+        tp = new TreePainter();
+        visualizerFrame.add(tp);
 
         //action listener for all buttons and menus
         listener = new ActionListener() {
@@ -81,6 +92,7 @@ public class GUIBasedHuffman {
                     //get input
                     String in = input.getText();
                     String encodedMessage = "";
+                    currTree = encoder.getEncodingTree(in);
                     try {
                         encodedMessage = encoder.encodeMessage(in);
                         output.setText(encodedMessage);
