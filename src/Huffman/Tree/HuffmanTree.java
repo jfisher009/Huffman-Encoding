@@ -178,16 +178,12 @@ public class HuffmanTree implements BinaryTreeADT {
      * @param tree Tree to get depth of
      * @return The depth of the tree
      */
-    private int getMaxDepth(HuffmanTree tree){
-        int leftDepth;
-        int rightDepth;
-
-        if(tree.isEmpty()){
+    private int getMaxDepth(HuffmanTree tree){if(tree.isEmpty()){
             return 0;
         }
         else{
-            leftDepth = getMaxDepth((HuffmanTree)tree.leftSubtree());
-            rightDepth = getMaxDepth((HuffmanTree)tree.rightSubtree());
+            int leftDepth = getMaxDepth((HuffmanTree)tree.leftSubtree());
+            int rightDepth = getMaxDepth((HuffmanTree)tree.rightSubtree());
             if(leftDepth > rightDepth){
                 return leftDepth + 1;
             }

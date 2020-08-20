@@ -81,6 +81,11 @@ public class HuffmanEncoder {
         }
     }
 
+    /**
+     * Returns the encoding tree for the given message
+     * @param message String to get encoding tree for
+     * @return The encoding tree
+     */
     public HuffmanTree getEncodingTree(String message){
         return treeBuilder.buildTree(message);
     }
