@@ -27,19 +27,31 @@ public class HuffmanDecoder {
      * @return The decoded message
      */
     public String decodeMessage(String binary){
+        HuffmanTree encodingTree = decodeTree(binary);
+
+        //first 16 bits are the number of bits used to encode the tree
+        int treeEncodeLength = Integer.parseInt(binary.substring(0,16), 2);
+        binary = binary.substring(16+treeEncodeLength);
+
+        return decodeMessage(binary, encodingTree);
+    }
+
+    /**
+     * Returns the decoding tree from the given encoded message
+     * @param binary Binary message to get tree for
+     * @return The Decoding tree
+     */
+    public HuffmanTree getDecodingTree(String binary){
         //Make sure string is in binary
         for(int i = 0; i < binary.length(); i++){
             if(!(binary.charAt(i) == '0' || binary.charAt(i) == '1')){
                 throw new IllegalStateException("Given string is not in binary");
             }
         }
-        //first 16 bits are the number of bits used to encode the tree
+
         int treeEncodeLength = Integer.parseInt(binary.substring(0,16), 2);
         String binaryEncodedTree = binary.substring(0,16+treeEncodeLength);
-        binary = binary.substring(16+treeEncodeLength, binary.length());
-
-        HuffmanTree encodingTree = decodeTree(binaryEncodedTree);
-        return decodeMessage(binary, encodingTree);
+        return decodeTree(binaryEncodedTree);
     }
 
     /**

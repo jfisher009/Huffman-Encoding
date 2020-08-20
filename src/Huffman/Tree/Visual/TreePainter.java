@@ -16,8 +16,9 @@ import java.util.List;
 public class TreePainter extends JPanel{
     public int horizontalSpacing = 100;
     public int verticalSpacing = 50;
-    public final  int SQUARE_SIDE_LENGTH = 50;
+    public final  int SQUARE_SIDE_LENGTH = 15;
     public final double  STARTX_FACTOR = 1.5;
+    private final int DEFAULT_HORIZONTAL_SPACING_FACTOR = 5;
 
     //used to roughly center the text in the displayed box
     private static final int TEXT_CENTERING_X = 3;
@@ -29,7 +30,7 @@ public class TreePainter extends JPanel{
 
     //textPoints holds the x,y values of the chars to draw in the boxes, charsToDraw holds the value of what is to be drawn
     private List<Point> textPoints;
-    private List<Integer> charsToDraw;
+    private List<Character> charsToDraw;
 
     /**
      * Constructor
@@ -53,7 +54,7 @@ public class TreePainter extends JPanel{
         charsToDraw.clear();
 
         //Set the starting position of the tree
-        horizontalSpacing = huffTree.getDepth() * SQUARE_SIDE_LENGTH;
+        horizontalSpacing = huffTree.getDepth() * SQUARE_SIDE_LENGTH * DEFAULT_HORIZONTAL_SPACING_FACTOR;
         int startX = (int)(horizontalSpacing * STARTX_FACTOR);
         int startY = verticalSpacing;
         makeDrawLists(huffTree, startX, startY, horizontalSpacing);
@@ -70,7 +71,7 @@ public class TreePainter extends JPanel{
         //if the node is a leaf, add a box to the appropriate list to draw in the window,
         if(tree.rightSubtree().root() == null && tree.leftSubtree().root() == null){
             leavesToDraw.add(new Rectangle((int) currX - SQUARE_SIDE_LENGTH / 2, currY, SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH));
-            charsToDraw.add(tree.root());
+            charsToDraw.add((char)(int)tree.root());
             textPoints.add(new Point(currX - TEXT_CENTERING_X, currY + TEXT_CENTERING_Y + (SQUARE_SIDE_LENGTH / 2)));
         }
         //if the node is an internal node, draw lines to the left and right, then draw the left and right subtrees
@@ -92,7 +93,7 @@ public class TreePainter extends JPanel{
         //instantiate local variables
         Line2D currLine;
         Rectangle2D currLeaf;
-        Integer currChar;
+        char currChar;
         g.setColor(Color.BLACK);
 
         //draw all of the lines

@@ -44,6 +44,7 @@ public class GUIBasedHuffman {
     private Button clearInput = new Button("Clear");
     private Button copyToClipboard = new Button("Copy to clipboard");
     private Button clearOutput = new Button("Clear");
+    private Button viewTree = new Button("View Tree");
 
     //Labels
     private JLabel asciiBits = new JLabel("Ascii Bits:");
@@ -69,7 +70,10 @@ public class GUIBasedHuffman {
      */
     public GUIBasedHuffman(){
         frame = new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         visualizerFrame = new JFrame();
+        visualizerFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         tp = new TreePainter();
         visualizerFrame.add(tp);
 
@@ -105,6 +109,10 @@ public class GUIBasedHuffman {
                         output.setText("Characters encoded must have ascii values between 0 and 128." +
                                 "\nPlease try again.");
                     }
+                    catch(java.lang.NullPointerException except){
+                        output.setText("Enter text to encode." +
+                                "\nPlease try again.");
+                    }
                     //figuring out stats
                     Integer asciiLength = in.length() * 8;
                     Integer huffmanLength = encodedMessage.length();
@@ -135,11 +143,16 @@ public class GUIBasedHuffman {
                 else if(e.getSource().equals(decode)){
                     try {
                         String in = input.getText();
+                        currTree = decoder.getDecodingTree(in);
                         output.setText(decoder.decodeMessage(in));
                     }
                     catch(IllegalStateException except){
                         output.setText("The given string is not in binary." +
                                 "\nPleasse try again with a binary string.");
+                    }
+                    catch(java.lang.StringIndexOutOfBoundsException except){
+                        output.setText("Enter text to decode." +
+                                "\nPlease try again.");
                     }
                 }
 
@@ -148,6 +161,18 @@ public class GUIBasedHuffman {
                     StringSelection stringSelection = new StringSelection(output.getText());
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);
+                }
+
+                //viewTree button
+                else if(e.getSource().equals(viewTree)){
+                    try {
+                        tp.drawTree(currTree);
+                        visualizerFrame.setSize(new Dimension((int) (tp.horizontalSpacing * 2 * tp.STARTX_FACTOR), tp.verticalSpacing * (currTree.getDepth() + 2)));
+                        visualizerFrame.setVisible(true);
+                    }
+                    catch(NullPointerException except){
+                        output.setText("No tree to display");
+                    }
                 }
 
                 //using drop down menu
@@ -256,19 +281,22 @@ public class GUIBasedHuffman {
         configTextArea(output,6,1,4);
 
         //Encode button
-        configButton(encode, 0,3);
+        configButton(encode, 0,3,1);
 
         //Decode button
-        configButton(decode, 0, 3);
+        configButton(decode, 0, 3,1);
 
         //Clear input button
-        configButton(clearInput, 1,3);
+        configButton(clearInput, 1,3,1);
 
         //Copy to clipboard button
-        configButton(copyToClipboard, 6,3);
+        configButton(copyToClipboard, 6,3,1);
 
         //Clear output button
-        configButton(clearOutput, 7,3);
+        configButton(clearOutput, 7,3,1);
+
+        //viewTree Button
+        configButton(viewTree, 10,3, 2);
     }
 
     /**
@@ -319,7 +347,7 @@ public class GUIBasedHuffman {
      * @param xpos Grid x position
      * @param ypos Grid y position
      */
-    private void configButton(Button button, int xpos, int ypos){
+    private void configButton(Button button, int xpos, int ypos, int width){
         button.addActionListener(listener);
         c.gridx = xpos;
         c.gridy = ypos;
@@ -328,7 +356,7 @@ public class GUIBasedHuffman {
         c.ipadx = 2;
         c.weighty = 0.0;
         c.weightx = 0.0;
-        c.gridwidth = 1;
+        c.gridwidth = width;
         c.gridheight = 1;
         c.anchor = GridBagConstraints.WEST;
         frame.add(button, c);
