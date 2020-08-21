@@ -1,6 +1,4 @@
 package Huffman.Tree.Visual;
-
-
 import Huffman.Tree.HuffmanTree;
 
 import javax.swing.*;
@@ -11,7 +9,7 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Used to visualize a tree in a JFrame
+ * Used to visualize a full huffman tree in a JFrame
  */
 public class TreePainter extends JPanel{
     public int horizontalSpacing = 100;
@@ -114,6 +112,4 @@ public class TreePainter extends JPanel{
             g.drawString(String.valueOf(currChar), (int)textPoints.get(i).getX(), (int)textPoints.get(i).getY());
         }
     }
-
-
 }

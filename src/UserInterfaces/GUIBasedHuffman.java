@@ -33,6 +33,9 @@ public class GUIBasedHuffman {
     private JFrame visualizerFrame;
     private TreePainter tp;
 
+    //used for the tutorial
+    private JFrame tutorialFrame;
+
     //Huffman encoder and decoder
     HuffmanEncoder encoder = new HuffmanEncoder();
     HuffmanDecoder decoder = new HuffmanDecoder();
@@ -70,12 +73,27 @@ public class GUIBasedHuffman {
      */
     public GUIBasedHuffman(){
         frame = new JFrame();
+        frame.setTitle("Huffman Encoder/Decoder");
+        frame.setIconImage(new ImageIcon(getClass().getResource(("/Pictures/HuffmanLogo.png"))).getImage());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        //setup visualization frame
         visualizerFrame = new JFrame();
+        visualizerFrame.setIconImage(new ImageIcon(getClass().getResource("/Pictures/HuffmanLogo.png")).getImage());
+        visualizerFrame.setTitle("Tree Viewer");
         visualizerFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         tp = new TreePainter();
         visualizerFrame.add(tp);
+
+        //setup tutorial frame
+        tutorialFrame = new JFrame();
+        tutorialFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        ImageIcon tutorialIcon = new ImageIcon(getClass().getResource("/Pictures/HuffmanTutorial.png"));
+        JLabel tutorialLabel = new JLabel(tutorialIcon);
+        tutorialFrame.add(tutorialLabel);
+        tutorialFrame.pack();
+        tutorialFrame.setIconImage(new ImageIcon(getClass().getResource("/Pictures/HuffmanLogo.png")).getImage());
+        tutorialFrame.setTitle("Huffman Tutorial");
 
         //action listener for all buttons and menus
         listener = new ActionListener() {
@@ -141,10 +159,12 @@ public class GUIBasedHuffman {
 
                 //decode button
                 else if(e.getSource().equals(decode)){
+                    String in = input.getText();
+                    String decoded = "";
                     try {
-                        String in = input.getText();
                         currTree = decoder.getDecodingTree(in);
-                        output.setText(decoder.decodeMessage(in));
+                        decoded = decoder.decodeMessage(in);
+                        output.setText(decoded);
                     }
                     catch(IllegalStateException except){
                         output.setText("The given string is not in binary." +
@@ -154,6 +174,30 @@ public class GUIBasedHuffman {
                         output.setText("Enter text to decode." +
                                 "\nPlease try again.");
                     }
+                    Integer asciiLength = decoded.length() * 8;
+                    Integer huffmanLength = in.length();
+                    double percentChange;
+                    String percentChangOut;
+
+                    //used to cut off after tow decimal points
+                    DecimalFormat df = new DecimalFormat("#.##");
+
+                    if(asciiLength > huffmanLength) {
+                        percentChange = (((double)(asciiLength - huffmanLength) / asciiLength) * 100);
+                        percentChangOut = "-" + df.format(percentChange) + "%";
+                    }
+                    else if(asciiLength < huffmanLength) {
+                        percentChange = (((double)(huffmanLength - asciiLength) / asciiLength) * 100);
+                        percentChangOut = "+" + df.format(percentChange) + "%";
+                    }
+                    else{
+                        percentChangOut = "+/-0.0%";
+                    }
+
+                    numAsciiBits.setText(asciiLength.toString());
+                    numHuffBits.setText(huffmanLength.toString());
+                    numPercentChange.setText(percentChangOut);
+
                 }
 
                 //Copy to clipboard button
@@ -194,23 +238,15 @@ public class GUIBasedHuffman {
 
         //add items to encode specific list
         encodeSpecificComponents.add(encode);
-        encodeSpecificComponents.add(asciiBits);
-        encodeSpecificComponents.add(numAsciiBits);
-        encodeSpecificComponents.add(huffmanBits);
-        encodeSpecificComponents.add(numHuffBits);
-        encodeSpecificComponents.add(percentChange);
-        encodeSpecificComponents.add(numPercentChange);
+        //encodeSpecificComponents.add(asciiBits);
+        //encodeSpecificComponents.add(numAsciiBits);
+        //encodeSpecificComponents.add(huffmanBits);
+        //encodeSpecificComponents.add(numHuffBits);
+        //encodeSpecificComponents.add(percentChange);
+        //encodeSpecificComponents.add(numPercentChange);
 
         //add items to decode specific list
         decodeSpecificComponents.add(decode);
-    }
-
-    /**
-     * Makes the frame visible so that the user can interact
-     * with it
-     */
-    public void run(){
-        frame.setVisible(true);
     }
 
     /**
@@ -387,5 +423,14 @@ public class GUIBasedHuffman {
         numAsciiBits.setText("0");
         numHuffBits.setText("0");
         numPercentChange.setText("0");
+    }
+
+    /**
+     * Makes the frame visible so that the user can interact
+     * with it
+     */
+    public void run(){
+        frame.setVisible(true);
+        tutorialFrame.setVisible(true);
     }
 }
