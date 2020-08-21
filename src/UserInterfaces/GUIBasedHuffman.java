@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * A GUI based interface for Huffman Encoding
  * @author Julian Fisher
- * @version 06-08-2020
+ * @version 08-21-2020
  */
 public class GUIBasedHuffman {
     //currTree used to hold the current encoding tree. It is update every time the encode or decode button is pressed.
@@ -140,6 +140,7 @@ public class GUIBasedHuffman {
                     //used to cut off after tow decimal points
                     DecimalFormat df = new DecimalFormat("#.##");
 
+                    //format percent change with positive or negative
                     if(asciiLength > huffmanLength) {
                         percentChange = (((double)(asciiLength - huffmanLength) / asciiLength) * 100);
                         percentChangOut = "-" + df.format(percentChange) + "%";
@@ -152,6 +153,7 @@ public class GUIBasedHuffman {
                         percentChangOut = "+/-0.0%";
                     }
 
+                    //update statistic labels
                     numAsciiBits.setText(asciiLength.toString());
                     numHuffBits.setText(huffmanLength.toString());
                     numPercentChange.setText(percentChangOut);
@@ -174,14 +176,17 @@ public class GUIBasedHuffman {
                         output.setText("Enter text to decode." +
                                 "\nPlease try again.");
                     }
+
+                    //get bit lengths for both models
                     Integer asciiLength = decoded.length() * 8;
                     Integer huffmanLength = in.length();
                     double percentChange;
                     String percentChangOut;
 
-                    //used to cut off after tow decimal points
+                    //used to cut off after two decimal points
                     DecimalFormat df = new DecimalFormat("#.##");
 
+                    //format percent change with positive or negative
                     if(asciiLength > huffmanLength) {
                         percentChange = (((double)(asciiLength - huffmanLength) / asciiLength) * 100);
                         percentChangOut = "-" + df.format(percentChange) + "%";
@@ -194,6 +199,7 @@ public class GUIBasedHuffman {
                         percentChangOut = "+/-0.0%";
                     }
 
+                    //update statistic labels
                     numAsciiBits.setText(asciiLength.toString());
                     numHuffBits.setText(huffmanLength.toString());
                     numPercentChange.setText(percentChangOut);
@@ -221,13 +227,25 @@ public class GUIBasedHuffman {
 
                 //using drop down menu
                 else if(e.getSource().equals(encodeOrDecode)){
+                    Component[] add;
+                    Component[] remove;
+
+                    //setup the lists to view or hide mode specific components
                     if(encodeOrDecode.getSelectedItem().equals("Encode")){
-                        setUpEncode();
+                        add = encodeSpecificComponents.toArray(Component[]::new);
+                        remove = decodeSpecificComponents.toArray(Component[]::new);
                     }
                     else if(encodeOrDecode.getSelectedItem().equals("Decode")){
-                        setUpDecode();
+                        add = decodeSpecificComponents.toArray(Component[]::new);
+                        remove = encodeSpecificComponents.toArray(Component[]::new);
                     }
-                    //Fixes an issue with jcombobox perpetually covering the
+                    //default case. This shouldn't run
+                    else{
+                        add = new Component[0];
+                        remove = new Component[0];
+                    }
+                    switchEncodeDecodeMode(add, remove);
+                    //Fixes an issue with jComboBox perpetually covering the
                     //input textarea
                     encodeOrDecode.setVisible(false);
                     encodeOrDecode.setVisible(true);
@@ -238,12 +256,6 @@ public class GUIBasedHuffman {
 
         //add items to encode specific list
         encodeSpecificComponents.add(encode);
-        //encodeSpecificComponents.add(asciiBits);
-        //encodeSpecificComponents.add(numAsciiBits);
-        //encodeSpecificComponents.add(huffmanBits);
-        //encodeSpecificComponents.add(numHuffBits);
-        //encodeSpecificComponents.add(percentChange);
-        //encodeSpecificComponents.add(numPercentChange);
 
         //add items to decode specific list
         decodeSpecificComponents.add(decode);
@@ -365,10 +377,12 @@ public class GUIBasedHuffman {
      */
     private void configTextArea(TextArea txtArea, int xpos, int ypos, int width){
         c.weighty = 0.0;
+
         //Split extra width between the text areas
         c.weightx = 0.5;
         c.gridx = xpos;
         c.gridy = ypos;
+
         //Both text areas are 6 columns wide
         c.gridwidth = 6;
         c.gridheight = 1;
@@ -399,35 +413,28 @@ public class GUIBasedHuffman {
     }
 
     /**
-     * Setup the window for encoding
+     * Makes all components in addList visible and hides all components in removeList
+     * @param addList List of items to set visible true
+     * @param removeList List of items to set visible false
      */
-    public void setUpEncode(){
-        for(Component comp:decodeSpecificComponents){
-            comp.setVisible(false);
-        }
-        for(Component comp:encodeSpecificComponents){
+    public void switchEncodeDecodeMode(Component[] addList, Component[] removeList){
+        //make components visible
+        for(Component comp:addList){
             comp.setVisible(true);
         }
-    }
-
-    /**
-     * Setup the window for decoding
-     */
-    public void setUpDecode(){
-        for(Component comp:encodeSpecificComponents){
+        //hide components
+        for(Component comp:removeList){
             comp.setVisible(false);
         }
-        for(Component comp:decodeSpecificComponents){
-            comp.setVisible(true);
-        }
+        //reset the statistic labels
         numAsciiBits.setText("0");
         numHuffBits.setText("0");
         numPercentChange.setText("0");
     }
 
     /**
-     * Makes the frame visible so that the user can interact
-     * with it
+     * Makes the main frame and tutorial frame visible so that the
+     * user can interact with the window
      */
     public void run(){
         frame.setVisible(true);

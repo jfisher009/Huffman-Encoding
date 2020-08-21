@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * Used to visualize a full huffman tree in a JFrame
+ * @author Julian Fisher
+ * @version 08-21-2020
  */
 public class TreePainter extends JPanel{
     public int horizontalSpacing = 100;
